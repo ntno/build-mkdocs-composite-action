@@ -21,13 +21,14 @@ inputs:
     default: 'us-east-1'
     required: true
     type: string                      
-secrets:
   aws-access-key-id:
     description: 'AWS Access Key ID.'
     required: true
+    type: string
   aws-secret-access-key:
     description: 'AWS Secret Access Key.'
     required: true
+    type: string
 runs:
   using: "composite"
   steps:
@@ -47,12 +48,15 @@ runs:
         python-version: '3.8'
         cache: 'pip' # caching pip dependencies
     - name: Download Image Bundle
+      shell: bash
       run: |
         make get-image-bundle download-directory="$RUNNER_TEMP/"
     - name: Build Site
+      shell: bash
       run: |
         source ./scripts/build.sh ${{ inputs.env-name }} ${{ inputs.aws-region }}
     - name: Archive Site
+      shell: bash
       run: |
         if [[ "${{ inputs.archive-enabled }}" == "true" ]]; then
             echo "Archiving site..."
