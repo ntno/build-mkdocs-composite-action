@@ -16,6 +16,11 @@ inputs:
     default: 'dev'
     required: true
     type: string
+  make-vars:
+    description: 'Variables to pass to make commands.  Ex: `DRY_RUN=1` would result in `make DRY_RUN=1 deploy-mkdocs...` See README.md for details.'
+    default: ""
+    required: false
+    type: string    
   aws-region:
     description: 'AWS Region.  Ex: us-east-1'
     default: 'us-east-1'
@@ -51,17 +56,17 @@ runs:
     - name: Download Assets
       shell: bash
       run: |
-        make setup-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} download-directory="$RUNNER_TEMP/"
+        make ${{ inputs.make-vars }} setup-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} download-directory="$RUNNER_TEMP/"
     - name: Build Site
       shell: bash
       run: |
-        make build-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }}
+        make ${{ inputs.make-vars }} build-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }}
     - name: Archive Site
       shell: bash
       run: |
         if [[ "${{ inputs.archive-enabled }}" == "true" ]]; then
             echo "Archiving site..."
-            make archive-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} version=${{ inputs.version }}
+            make ${{ inputs.make-vars }} archive-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} version=${{ inputs.version }}
         else
             echo "Archive not enabled.  Skipping archive step..."
         fi
