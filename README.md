@@ -1,0 +1,1 @@
+# build-mkdocs-composite-action
