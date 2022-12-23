@@ -1,6 +1,5 @@
 # build-mkdocs-composite-action
 ## features
-- installs [buildenv tool](https://github.com/Comcast/Buildenv-Tool)
 - configures AWS credentials
 - sets up python and loads pip cache
 - builds mkdocs site

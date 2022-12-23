@@ -39,8 +39,6 @@ runs:
   steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Install Buildenv
-      uses: ntno/setup-buildenv@v1
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
