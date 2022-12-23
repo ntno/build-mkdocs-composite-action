@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build PR
-        uses: ntno/build-mkdocs-composite-action@v1
+        uses: ntno/build-mkdocs-composite-action@v2
         with:
           archive-enabled: true
           version: 1.0.3
