@@ -29,6 +29,11 @@ inputs:
     description: 'AWS Secret Access Key.'
     required: true
     type: string
+  python-version:
+    description: 'Python Version'
+    default: '3.8'
+    required: true
+    type: string
 runs:
   using: "composite"
   steps:
@@ -45,24 +50,22 @@ runs:
     - name: Restore Pip Cache
       uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
-        cache: 'pip' # caching pip dependencies
-    - name: Download Image Bundle
+        python-version: ${{ inputs.python-version }} 
+        cache: 'pip'
+    - name: Download Assets
       shell: bash
       run: |
-        make get-image-bundle download-directory="$RUNNER_TEMP/"
+        make setup-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} download-directory="$RUNNER_TEMP/"
     - name: Build Site
       shell: bash
       run: |
-        source ./scripts/build.sh ${{ inputs.env-name }} ${{ inputs.aws-region }}
+        make build-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }}
     - name: Archive Site
       shell: bash
       run: |
         if [[ "${{ inputs.archive-enabled }}" == "true" ]]; then
             echo "Archiving site..."
-            make bundle input-directory="./site" output-directory="./" bundle-filename="docs-site.tar" manifest-filename="manifest.txt"
-            make upload-docs-artifact file="./docs-site.tar" version=${{ inputs.version }}
-            make upload-docs-artifact file="./manifest.txt" version=${{ inputs.version }}
+            make archive-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} version=${{ inputs.version }}
         else
             echo "Archive not enabled.  Skipping archive step..."
         fi
