@@ -20,7 +20,7 @@ jobs:
         uses: ntno/build-mkdocs-composite-action@v2
         with:
           archive-enabled: true
-          version: 1.0.3
+          version: 1.0.3-pr
           env-name: prod
           aws-region: us-east-2
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
