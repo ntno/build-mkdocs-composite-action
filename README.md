@@ -2,12 +2,12 @@
 ## features
 - installs [buildenv tool](https://github.com/Comcast/Buildenv-Tool)
 - configures AWS credentials
-- sets up python / checks pip cache
+- sets up python and loads pip cache
 - builds mkdocs site
-- archives site (optional)
+- archives mkdocs site to AWS (optional)
 
 ## usage
-note: secrets for composite actions must be configured using an [`environment`](https://docs.github.com/en/actions/using-jobs/using-environments-for-jobs).  the `ci` environment is used in the following example.  it contains the secrets `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+*__note:__* Secrets for composite actions must be configured using an [`environment`](https://docs.github.com/en/actions/using-jobs/using-environments-for-jobs).  The `ci` environment is used in the following example.  It contains the secrets `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
 ```
 jobs:
@@ -30,7 +30,7 @@ jobs:
 
 ## inputs
 ```
-archive-enabled:
+  archive-enabled:
     description: 'Enables archiving of build artifact.  Ex: `true` or `false`'
     default: false
     required: true
