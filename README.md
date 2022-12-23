@@ -15,7 +15,7 @@ jobs:
     environment: ci
     steps: 
       - name: Checkout
-        uses: actions/checkout@v3     
+        uses: actions/checkout@v3
       - name: Build PR
         uses: ntno/build-mkdocs-composite-action@v2
         with:
