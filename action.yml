@@ -55,7 +55,7 @@ runs:
     - name: Download Assets
       shell: bash
       run: |
-        make download-mkdocs-assets env=${{ inputs.env-name }} region=${{ inputs.aws-region }} download-directory="$RUNNER_TEMP/"
+        make setup-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} download-directory="$RUNNER_TEMP/"
     - name: Build Site
       shell: bash
       run: |
