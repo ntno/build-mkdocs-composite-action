@@ -8,7 +8,11 @@
 ## usage
 
 ### [Recommended - Assume Role directly using GitHub OIDC provider](https://github.com/aws-actions/configure-aws-credentials#assuming-a-role)
+*__note:__* using OIDC requires `id-token` write and `contents` read  permissions granted to GITHUB_TOKEN. see [Assigning permissions](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) for more information on assigning workflow permissions.
 ```
+permissions:
+  id-token: write
+  contents: read
 jobs:
   build-pr:
     runs-on: ubuntu-latest
@@ -22,7 +26,7 @@ jobs:
           version: 1.0.3-pr
           env-name: prod
           aws-region: us-east-2
-          role-to-assume: CI-ntno.net
+          role-to-assume: arn:aws:iam::************:role/CI-ntno.net
 ```
 
 ### [IAM User](https://github.com/aws-actions/configure-aws-credentials#assuming-a-role)
