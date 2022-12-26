@@ -6,6 +6,30 @@
 - archives mkdocs site to AWS (optional)
 
 ## usage
+
+### [Recommended - Assume Role directly using GitHub OIDC provider](https://github.com/aws-actions/configure-aws-credentials#assuming-a-role)
+*__note:__* using OIDC requires `id-token` write and `contents` read  permissions granted to GITHUB_TOKEN. see [Assigning permissions](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) for more information on assigning workflow permissions.
+```
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  build-pr:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build PR
+        uses: ntno/build-mkdocs-composite-action@v3
+        with:
+          archive-enabled: true
+          version: 1.0.3-pr
+          env-name: prod
+          aws-region: us-east-2
+          role-to-assume: arn:aws:iam::************:role/CI-ntno.net
+```
+
+### [IAM User](https://github.com/aws-actions/configure-aws-credentials#assuming-a-role)
 *__note:__* Secrets for composite actions must be configured using an [`environment`](https://docs.github.com/en/actions/using-jobs/using-environments-for-jobs).  The `ci` environment is used in the following example.  It contains the secrets `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
 ```
@@ -17,7 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build PR
-        uses: ntno/build-mkdocs-composite-action@v2
+        uses: ntno/build-mkdocs-composite-action@v3
         with:
           archive-enabled: true
           version: 1.0.3-pr
@@ -43,6 +67,11 @@ jobs:
     default: 'dev'
     required: true
     type: string
+  make-vars:
+    description: 'Variables to pass to all make commands.  Ex: `QUIET=1` would result in `make QUIET=1 build-mkdocs...`'
+    default: "--no-print-directory"
+    required: false
+    type: string
   aws-region:
     description: 'AWS Region.  Ex: us-east-1'
     default: 'us-east-1'
@@ -50,12 +79,28 @@ jobs:
     type: string                      
   aws-access-key-id:
     description: 'AWS Access Key ID.'
-    required: true
-    type: string
+    required: false
   aws-secret-access-key:
     description: 'AWS Secret Access Key.'
-    required: true
-    type: string
+    required: false
+  role-to-assume:
+    description: >-
+      Use the provided credentials to assume an IAM role and configure the Actions
+      environment with the assumed role credentials rather than with the provided
+      credentials
+    required: false
+  role-duration-seconds:
+    description: "Role duration in seconds (default: 6 hours, 1 hour for OIDC/specified aws-session-token)"
+    required: false
+  role-session-name:
+    description: 'Role session name (default: GitHubActions)'
+    required: false
+  role-external-id:
+    description: 'The external ID of the role to assume'
+    required: false
+  role-skip-session-tagging:
+    description: 'Skip session tagging during role assumption'
+    required: false    
   python-version:
     description: 'Python Version'
     default: '3.8'
@@ -78,6 +123,10 @@ use this directive to build mkdocs site
 
 ### archive-mkdocs (optional)
 use this directive to upload the site to S3
+
+## see also  
+- [Use OpenID Connect within your workflows to authenticate with Amazon Web Services.](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services) 
+- [AWS Credentials GitHub action](https://github.com/aws-actions/configure-aws-credentials)
 
 ## references
 - https://docs.github.com/en/actions/creating-actions/creating-a-composite-action

@@ -16,6 +16,11 @@ inputs:
     default: 'dev'
     required: true
     type: string
+  make-vars:
+    description: 'Variables to pass to all make commands.  Ex: `QUIET=1` would result in `make QUIET=1 build-mkdocs...`'
+    default: "--no-print-directory"
+    required: false
+    type: string
   aws-region:
     description: 'AWS Region.  Ex: us-east-1'
     default: 'us-east-1'
@@ -23,12 +28,28 @@ inputs:
     type: string                      
   aws-access-key-id:
     description: 'AWS Access Key ID.'
-    required: true
-    type: string
+    required: false
   aws-secret-access-key:
     description: 'AWS Secret Access Key.'
-    required: true
-    type: string
+    required: false
+  role-to-assume:
+    description: >-
+      Use the provided credentials to assume an IAM role and configure the Actions
+      environment with the assumed role credentials rather than with the provided
+      credentials
+    required: false
+  role-duration-seconds:
+    description: "Role duration in seconds (default: 6 hours, 1 hour for OIDC/specified aws-session-token)"
+    required: false
+  role-session-name:
+    description: 'Role session name (default: GitHubActions)'
+    required: false
+  role-external-id:
+    description: 'The external ID of the role to assume'
+    required: false
+  role-skip-session-tagging:
+    description: 'Skip session tagging during role assumption'
+    required: false    
   python-version:
     description: 'Python Version'
     default: '3.8'
@@ -40,9 +61,14 @@ runs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
+        aws-region: ${{ inputs.aws-region }}
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
-        aws-region: ${{ inputs.aws-region }} 
+        role-to-assume: ${{ inputs.role-to-assume }}
+        role-duration-seconds: ${{ inputs.role-duration-seconds }}
+        role-session-name: ${{ inputs.role-session-name }}
+        role-external-id: ${{ inputs.role-external-id }}
+        role-skip-session-tagging: ${{ inputs.role-skip-session-tagging }}
     - name: Restore Pip Cache
       uses: actions/setup-python@v4
       with:
@@ -51,17 +77,17 @@ runs:
     - name: Download Assets
       shell: bash
       run: |
-        make setup-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} download-directory="$RUNNER_TEMP/"
+        make ${{ inputs.make-vars }} setup-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} download-directory="$RUNNER_TEMP/"
     - name: Build Site
       shell: bash
       run: |
-        make build-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }}
+        make ${{ inputs.make-vars }} build-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }}
     - name: Archive Site
       shell: bash
       run: |
         if [[ "${{ inputs.archive-enabled }}" == "true" ]]; then
             echo "Archiving site..."
-            make archive-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} version=${{ inputs.version }}
+            make ${{ inputs.make-vars }} archive-mkdocs env=${{ inputs.env-name }} region=${{ inputs.aws-region }} version=${{ inputs.version }}
         else
             echo "Archive not enabled.  Skipping archive step..."
         fi
