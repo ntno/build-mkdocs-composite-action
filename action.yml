@@ -17,7 +17,7 @@ inputs:
     required: true
     type: string
   make-vars:
-    description: 'Variables to pass to all make commands.  Ex: `QUIET=1` would result in `make QUIET=1 build-mkdocs...` See README.md for details.'
+    description: 'Variables to pass to all make commands.  Ex: `QUIET=1` would result in `make QUIET=1 build-mkdocs...`'
     default: "--no-print-directory"
     required: false
     type: string
