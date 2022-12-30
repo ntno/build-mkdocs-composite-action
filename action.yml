@@ -98,11 +98,6 @@ runs:
         else
           python3 -m pip install -r ./requirements.txt
         fi
-      # - name: Restore Pip Cache
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: ${{ inputs.python-version }} 
-      #     cache: 'pip'
     - name: Download Assets
       shell: bash
       run: |
