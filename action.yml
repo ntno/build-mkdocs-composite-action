@@ -83,6 +83,7 @@ runs:
       shell: bash
       run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
     - name: Cache dependencies
+      id: cache-pip-dependencies
       uses: actions/cache@v3
       with:
         path: ${{ steps.pip-cache.outputs.dir }}
@@ -91,7 +92,13 @@ runs:
           ${{ runner.os }}-pip-
     - name: Install dependencies
       shell: bash
-      run: python3 -m pip install -r ./requirements.txt
+      run: |
+        if echo ${{ steps.cache-pip-dependencies.outputs.cache-hit }} | grep -c "true"
+        then
+          echo "Cache hit - skipping dependency installation"
+        else
+          python3 -m pip install -r ./requirements.txt
+        fi
     - name: Restore Pip Cache
       uses: actions/setup-python@v4
       with:
