@@ -73,12 +73,12 @@ runs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ inputs.python-version }} 
-    - name: Upgrade pip
+    - name: Upgrade Pip
       shell: bash
       run: |
         # install pip=>20.1 to use "pip cache dir"
         python3 -m pip install --upgrade pip
-    - name: Get pip Cache Dir
+    - name: Get Pip Cache Dir
       id: pip-cache
       shell: bash
       run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
