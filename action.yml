@@ -93,8 +93,7 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        if echo ${{ steps.cache-pip-dependencies.outputs.cache-hit }} | grep -c "true"
-        then
+        if [[ "${{ steps.cache-pip-dependencies.outputs.cache-hit }}" == "true" ]]; then
           echo "Cache hit - skipping dependency installation"
         else
           python3 -m pip install -r ./requirements.txt
