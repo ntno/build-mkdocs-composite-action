@@ -78,11 +78,11 @@ runs:
       run: |
         # install pip=>20.1 to use "pip cache dir"
         python3 -m pip install --upgrade pip
-    - name: Get pip cache dir
+    - name: Get pip Cache Dir
       id: pip-cache
       shell: bash
       run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-    - name: Cache dependencies
+    - name: Cache Dependencies
       id: cache-pip-dependencies
       uses: actions/cache@v3
       with:
@@ -90,7 +90,7 @@ runs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-    - name: Install dependencies
+    - name: Install Dependencies
       shell: bash
       run: |
         if [[ "${{ steps.cache-pip-dependencies.outputs.cache-hit }}" == "true" ]]; then
