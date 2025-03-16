@@ -1,5 +1,10 @@
 name: Dependabot Pull Request
-on: pull_request
+on:
+  workflow_run:
+    workflows: ["Dependabot PR Check"]
+    types: 
+      - completed
+
 jobs:
   dependabot:
     permissions:
