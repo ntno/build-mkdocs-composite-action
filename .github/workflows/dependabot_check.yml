@@ -14,13 +14,11 @@ jobs:
   dependabot:
     needs: [check-dependabot]
     permissions:
-      pull-requests: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
     - name: Fetch Dependabot metadata
       id: dependabot-metadata
       uses: dependabot/fetch-metadata@v2
       with:
-        alert-lookup: true
-        compat-lookup: true
-        github-token: "${{ secrets.GH_PAT_DEPENDABOT }}"
+        github-token: "${{ secrets.GITHUB_TOKEN }}"
