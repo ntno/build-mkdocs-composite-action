@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build PR
-        uses: ntno/build-mkdocs-composite-action@v5
+        uses: ntno/build-mkdocs-composite-action@v6
         with:
           archive-enabled: true
           version: 1.0.3-pr
@@ -41,7 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build PR
-        uses: ntno/build-mkdocs-composite-action@v5
+        uses: ntno/build-mkdocs-composite-action@v6
         with:
           archive-enabled: true
           version: 1.0.3-pr
