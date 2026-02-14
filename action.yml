@@ -70,7 +70,7 @@ runs:
         role-external-id: ${{ inputs.role-external-id }}
         role-skip-session-tagging: ${{ inputs.role-skip-session-tagging }}
     - name: Setup Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ inputs.python-version }} 
     - name: Upgrade Pip
